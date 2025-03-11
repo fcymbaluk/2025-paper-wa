@@ -1,0 +1,645 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.6.40">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="author" content="Fernando Cymbaluk">
+<meta name="dcterms.date" content="2025-03-01">
+
+<title>The PPCDAm Effect on the Deforestation of the Brazilian Amazon: Exploratory Data Analysis of Local Implementation Approach</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+</style>
+
+
+<script src="wa-paper-2025-march_files/libs/clipboard/clipboard.min.js"></script>
+<script src="wa-paper-2025-march_files/libs/quarto-html/quarto.js"></script>
+<script src="wa-paper-2025-march_files/libs/quarto-html/popper.min.js"></script>
+<script src="wa-paper-2025-march_files/libs/quarto-html/tippy.umd.min.js"></script>
+<script src="wa-paper-2025-march_files/libs/quarto-html/anchor.min.js"></script>
+<link href="wa-paper-2025-march_files/libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="wa-paper-2025-march_files/libs/quarto-html/quarto-syntax-highlighting-549806ee2085284f45b00abea8c6df48.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="wa-paper-2025-march_files/libs/bootstrap/bootstrap.min.js"></script>
+<link href="wa-paper-2025-march_files/libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="wa-paper-2025-march_files/libs/bootstrap/bootstrap-973236bd072d72a04ee9cd82dcc9cb29.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+
+
+</head>
+
+<body>
+
+<div id="quarto-content" class="page-columns page-rows-contents page-layout-article">
+<div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+<div class="quarto-alternate-formats"><h2>Other Formats</h2><ul><li><a href="wa-paper-2025-march.pdf"><i class="bi bi-file-pdf"></i>PDF</a></li></ul></div></div>
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">The PPCDAm Effect on the Deforestation of the Brazilian Amazon: Exploratory Data Analysis of Local Implementation Approach</h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    <div>
+    <div class="quarto-title-meta-heading">Author</div>
+    <div class="quarto-title-meta-contents">
+             <p>Fernando Cymbaluk </p>
+          </div>
+  </div>
+    
+    <div>
+    <div class="quarto-title-meta-heading">Published</div>
+    <div class="quarto-title-meta-contents">
+      <p class="date">March 1, 2025</p>
+    </div>
+  </div>
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<section id="introduction" class="level2">
+<h2 class="anchored" data-anchor-id="introduction">Introduction</h2>
+<p>The literature seeking explanations for the reduction in Amazon deforestation between 2006 and 2012 and the intensification of forest clearing between 2013 and 2022 highlights one crucial institutional factor: the environmental public policy carried out by the federal government (Assunção, Rocha, 2019; Hargrave, Kis-Katos, 2013). These studies indicate that federal policies such as the Action Plan for the Prevention and Control of Deforestation in the Legal Amazon (PPCDAm) contributed to the decline in biome degradation during the first period, while the gradual dismantling of these actions led to a reversal of the trend in the second (figure 1).</p>
+<div class="cell" data-layout-align="center">
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="wa-paper-2025-march_files/figure-html/unnamed-chunk-1-1.png" class="img-fluid figure-img" width="768"></p>
+<figcaption>Fig. 1: Deforestation in the Brazilian Amazon (2006-2022)</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<p>However, the literature does not explain the mechanisms through which the federal government’s environmental actions control the degradation at the local level. Additionally, there are three reasons to believe that the federal government’s actions in the Amazon are not automatic but mediated by other political and institutional factors:</p>
+<ul>
+<li>Brazilian environmental policy is decentralized and has been undergoing redesigns at the state and municipal levels;</li>
+<li>The local political and socioeconomic context matters;</li>
+<li>Deforestation data from the Amazon indicates variations in deforestation trajectories among municipalities under the same environmental pressures.</li>
+</ul>
+<p>What causal factors explain the variation in the enforcement of federal environmental rules among Amazonian municipalities between 2006 and 2021? The hypothesis is that the variation in factors along the vertical axis of intergovernmental relations and the horizontal axis of state-society relations leads to different outcomes (Kazepov; Barberis, 2012; Sellers; Lidström; Bae, 2020).</p>
+<p>This is a partial report of the work that is still in progress. In this text I drive an exploratory data analysis trying to identify differences in the success or failure of the implementation of PPCDAm despite its overall success.</p>
+<p>In the following steps of the work, I aim to run a Difference-in-Difference analysis and/or a time-series cross-section analysis, in an attempt to find local political and institutional factors that explain variation in the deforestation rate among municipalities.</p>
+</section>
+<section id="the-dataset" class="level2">
+<h2 class="anchored" data-anchor-id="the-dataset">The dataset</h2>
+<p>I use environmental, social and economic data to explore trends and patterns of deforestation in the Amazon biome (my dependent variable) and possible effects related to social and economic aspects (my independent variables). The data is sourced from the datazoom.amazonia R package, which facilitates access to official Brazilian Amazon data, including agriculture, deforestation, production, etc. The package provides functions that download and pre-process selected datasets. The datasets that I use are:</p>
+<p><strong>Environemntal:</strong></p>
+<ul>
+<li><p>MapBiomas: A Brazilian project that provides annual land use and land cover reports. The data is based on satellite images and provides information on the Amazon biome, including deforestation and regeneration of vegetation. Areas are measured in hectares (ha).</p></li>
+<li><p>Imazon: A Brazilian NGO that provides reports on deforestation in the Amazon biome. The dataset Loads data categorizing each municipality by the level of deforestation pressure it faces. The categories used by Imazon have three levels, ranging from 0 to 3.</p></li>
+</ul>
+<p><strong>Social:</strong></p>
+<ul>
+<li>IPS: The Social Progress Index (IPS) is a composite index that measures social progress in Brazilian municipalities. Includes information on the overall social progress score, as well as scores for specific components such sanitation, health, and education. The data is available for 2014, 2018, 2021, and 2023.</li>
+</ul>
+<p><strong>Economic:</strong></p>
+<ul>
+<li><p>PIB-Munic: The Brazilian Institute of Geography and Statistics (IBGE) provides data of Brazilian municipalities on the Gross Domestic Product (GDP) at current prices, taxes, net of subsidies on products, gross value added, total and by economic activity, and respective shares. Data is available from 2002 to 2018.</p></li>
+<li><p>PAM: The Municipal Agricultural Production (PAM) is an annual survey conducted by IBGE which provides on the production of crops in Brazilian municipalities. Output is only included in the dataset if the planted area occupies over 1 acre. The data available has a yearly frequency and is available from 1974 to the present.</p></li>
+<li><p>PPM: The Municipal Livestock Production (PPM) is an annual survey conducted by IBGE which provides data on the production of livestock in Brazilian municipalities, such inventories (e.g:cattle, pigs and hogs) and production (e.g: milk, eggs, honey). The data available has a yearly frequency and is available from 1974 to the present.</p></li>
+<li><p>SIGMINE: The National Mining Agency (ANM) provides data on mining legally activities in Brazilian municipalities. The data includes information on location, status, product being mined and area in square meters etc</p></li>
+</ul>
+<p><strong>Institutional:</strong></p>
+<p>I constructed a dataset with data about the PPCDAm policy. The dataset includes information on the year when the municipality was included in the list of municipalities targeted by the PPCDAm policy, the year when the municipality was removed from the list, and the status of the municipality in the list (prioritized or monitored). The data was constructed by myself using information from the Ministry of Environment.</p>
+</section>
+<section id="issues-to-solve" class="level2">
+<h2 class="anchored" data-anchor-id="issues-to-solve">Issues to solve</h2>
+<p>I faced issues when loading the dataset related to the social and economic variables. To address this issue, I will use other oficial datasets.</p>
+<p>Due to those issues, my exploratory data analysis did not dive deep into the relationship between social and economic variables and deforestation. I focused on the environmental data and the relationship between the PPCDAm policy and deforestation in the Amazon biome.</p>
+</section>
+<section id="exploratore-data-analysis" class="level2">
+<h2 class="anchored" data-anchor-id="exploratore-data-analysis">Exploratore Data Analysis</h2>
+<p>The Action Plan for the Prevention and Control of Deforestation in the Legal Amazon (PPCDAm), initiated in 2006, is the central public policy promoted in Brazil to reduce deforestation in the Amazon biome. In the governance arrangement of this policy, the federal government establishes, in addition to direct inspection and control actions, induction and constraint mechanisms for municipalities to pursue environmental conservation goals. The target of the actions is the region known as the “arc of deforestation,” which concentrates around 250 municipalities where forest destruction has historically been concentrated.</p>
+<p>Since 2009, 91 municipalities have begun to be targeted by the federal government based on their history of deforestation, with some prioritized in actions and others only monitored. The condition for leaving the list is a significant reduction in deforestation. With this arrangement, the policy is a test for municipal political and institutional dynamics, allowing the performance of local governments too be assessed to remain outside the list created by the federal government or to leave it. Assunção and Rocha (2019) explore this with a difference-in-differences test. The analysis carried out by the authors indicates that the PPCDAm policy significantly reduced overall deforestation.</p>
+<p><strong>Interpretation of the Normalized Increment Rate:</strong></p>
+<p>To this exploratory data analysis I used a normalized measure of the annual deforestation increase to smoothen the cross-sectional deforestation variation arising from municipality size heterogeneity, as Assunção and Rocha (2019).</p>
+<p>The Normalized_incremento variable is a standardized measure of the annual deforestation increase, adjusted for the mean and standard deviation of each municipality’s deforestation rates. This allows for comparison across municipalities with different sizes and baseline deforestation rates.</p>
+<ul>
+<li>A negative Normalized_incremento indicates that the deforestation rate for a given year is below the average deforestation rate for that municipality.</li>
+<li>A positive Normalized_incremento indicates that the deforestation rate for a given year is above the average deforestation rate for that municipality.</li>
+</ul>
+<p>The general trajectory of deforestation in the Amazon shows a reduction after implementing the PPCDAm, followed by a subsequent increase in deforestation, which the literature attributes to the weakening of federal policy (figure2).</p>
+<div class="cell" data-layout-align="center">
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="wa-paper-2025-march_files/figure-html/unnamed-chunk-2-1.png" class="img-fluid figure-img" width="768"></p>
+<figcaption>Fig. 2: Normalized Increment Rate of Deforestation in the Brazilian Amazon (2006-2022)</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<p>However, when we analyzed the trajectories of municipalities specifically, we found variations, with municipalities that were targeted by PPCDAm maintaining low levels of deforestation over time and others that also received the policy, but experienced an increase in forest destruction</p>
+<p>As a result, many municipalities prioritized by PPCDAm performed the same or worse than non-prioritized municipalities that saw their level of deforestation worsen (figure 3).</p>
+<div class="cell" data-layout-align="center">
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="wa-paper-2025-march_files/figure-html/unnamed-chunk-3-1.png" class="img-fluid figure-img" width="768"></p>
+<figcaption>Fig. 3: Normalized Increment Rate of Deforestation in the Brazilian Amazon (2006-2022)</figcaption>
+</figure>
+</div>
+</div>
+</div>
+</section>
+<section id="two-different-periods" class="level2">
+<h2 class="anchored" data-anchor-id="two-different-periods">Two different periods:</h2>
+<p>To do the Exploratory Data Analysis, I selected a time period from 2006 to 2021. It is due to the fact that I have more information about the variables of interest. I will use the data_environ_social_econ dataset to explore the trends and patterns of deforestation in the Amazon biome and possible effects related to social and economic aspects. I will also explore the relationship between the variables and the possible effects of the PPCDAm program on deforestation in the Amazon biome (figure 4 and 5).</p>
+<div class="cell" data-layout-align="center">
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="wa-paper-2025-march_files/figure-html/unnamed-chunk-4-1.png" class="img-fluid figure-img" width="768"></p>
+<figcaption>Fig. 4: Histogram of Normalized Deforestation</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<div class="cell" data-layout-align="center">
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="wa-paper-2025-march_files/figure-html/unnamed-chunk-5-1.png" class="img-fluid figure-img" width="768"></p>
+<figcaption>Fig. 5: Density of Normalized Deforestation</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<p>The exploratory data analysis shows that the PPCDAm policy had a significant impact on the reduction of deforestation in the Amazon biome. However, the policy’s effectiveness varied among municipalities, with some municipalities maintaining low levels of deforestation over time and others experiencing an increase in forest destruction.</p>
+</section>
+<section id="next-steps" class="level2">
+<h2 class="anchored" data-anchor-id="next-steps">Next steps:</h2>
+<p>I will conclude the setting up process of the database, finalizing it with social and economic data. The construction of the database will be followed by the use of causal inference techniques that reduce selection biases and isolate the causal effect of the treatment variables (Cunningham, 2021).</p>
+<p>The first technique will be matching, which involves pairing similar units of analysis using covariates such as GDP per capita, deforestation history, and commodity price indices. If data are not obtained from all municipalities, using the Propensity Score Matching model will allow for estimating the probability of a municipality with unobservable data having the factors in question and pairing it with similar municipalities.</p>
+<p>A second technique to be used is difference-in-differences (DiD), which allows for estimating the causal effect of the variables of interest by comparing changes in results over time between treatment and control groups. DiD is possible because the PPCDAm was developed to create a list of priority municipalities (which served as the treatment group). Municipalities not included in these lists will form the control group. Comparisons between the treatment and control groups will also be made over time, considering periods before and after the start of each phase of the program (figure 6).</p>
+<div class="cell" data-layout-align="center">
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="wa-paper-2025-march_files/figure-html/unnamed-chunk-6-1.png" class="img-fluid figure-img" width="768"></p>
+<figcaption>Fig. 6: Difference-in-Differences Design</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<p>The combination of matching with DiD will increase the robustness of the results (Cunningham, 2021). The performance of the municipalities will be compared to estimate the average effect of political and institutional factors (independent variables) on environmental indicators (dependent variable), thus producing a trend curve and a probabilistic response. The statistical design is being refined throughout the preparation of the research.</p>
+</section>
+<section id="references" class="level2">
+<h2 class="anchored" data-anchor-id="references">References</h2>
+<p>Assunção, J., Rocha, R. (2019). Getting greener by going black: the effect of blacklisting municipalities on Amazon deforestation. Environment and Development Economics</p>
+<p>Cunningham, S. (2021). Causal Inference: The Mixtape. Yale University Press.</p>
+<p>Data Zoom (2023). Data Zoom: Simplifying Access To Brazilian Microdata. https://www.econ.puc-rio.br/datazoom/english/index.html</p>
+<p>Fairfield, T., &amp; Charman, A. E. (2022). Social inquiry and Bayesian inference: Rethinking qualitative research. Cambridge University Press</p>
+<p>Hargrave, J., Kis-Katos, K. (2013). Economic Causes of Deforestation in the Brazilian Amazon: A Panel Data Analysis for the 2000s. Environmental and Resource Economics</p>
+<p>Humphreys, M., Jacobs, A. (2023). Integrating Inferences: Causal Models for Qualitative and MixedMethod Research. Cambridge University Press</p>
+<p>Kasepov, Y., Barberis, E. (2012). Social Assistance Governance in Europe: Towards a Multilevel Perspective</p>
+<p>Manzolli, Bruno; Rajão, Raoni. (2021). Legalidade da produção de ouro no Brasil. Belo Horizonte: Editora IGC/UFMG</p>
+<p>Moreira Salles, J. (2022). Arrabalde: em busca da Amazônia. São Paulo, Brazil: Companhia das Letras.</p>
+<p>Sellers, J., Lidstrom, A., Bae, A. (2023). Multilevel Democracy: How Local Institutions and Civil Society Shape the Modern State. Cambridge University Press</p>
+</section>
+
+</main>
+<!-- /main column -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
+  const onCopySuccess = function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  }
+  const getTextToCopy = function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+    text: getTextToCopy
+  });
+  clipboard.on('success', onCopySuccess);
+  if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+    const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+      text: getTextToCopy,
+      container: window.document.getElementById('quarto-embedded-source-code-modal')
+    });
+    clipboardModal.on('success', onCopySuccess);
+  }
+    var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+    var mailtoRegex = new RegExp(/^mailto:/);
+      var filterRegex = new RegExp('/' + window.location.host + '/');
+    var isInternal = (href) => {
+        return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+    }
+    // Inspect non-navigation links and adorn them if external
+ 	var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+    for (var i=0; i<links.length; i++) {
+      const link = links[i];
+      if (!isInternal(link.href)) {
+        // undo the damage that might have been done by quarto-nav.js in the case of
+        // links that we want to consider external
+        if (link.dataset.originalHref !== undefined) {
+          link.href = link.dataset.originalHref;
+        }
+      }
+    }
+  function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+    const config = {
+      allowHTML: true,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start',
+    };
+    if (contentFn) {
+      config.content = contentFn;
+    }
+    if (onTriggerFn) {
+      config.onTrigger = onTriggerFn;
+    }
+    if (onUntriggerFn) {
+      config.onUntrigger = onUntriggerFn;
+    }
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      if (note) {
+        return note.innerHTML;
+      } else {
+        return "";
+      }
+    });
+  }
+  const xrefs = window.document.querySelectorAll('a.quarto-xref');
+  const processXRef = (id, note) => {
+    // Strip column container classes
+    const stripColumnClz = (el) => {
+      el.classList.remove("page-full", "page-columns");
+      if (el.children) {
+        for (const child of el.children) {
+          stripColumnClz(child);
+        }
+      }
+    }
+    stripColumnClz(note)
+    if (id === null || id.startsWith('sec-')) {
+      // Special case sections, only their first couple elements
+      const container = document.createElement("div");
+      if (note.children && note.children.length > 2) {
+        container.appendChild(note.children[0].cloneNode(true));
+        for (let i = 1; i < note.children.length; i++) {
+          const child = note.children[i];
+          if (child.tagName === "P" && child.innerText === "") {
+            continue;
+          } else {
+            container.appendChild(child.cloneNode(true));
+            break;
+          }
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(container);
+        }
+        return container.innerHTML
+      } else {
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        return note.innerHTML;
+      }
+    } else {
+      // Remove any anchor links if they are present
+      const anchorLink = note.querySelector('a.anchorjs-link');
+      if (anchorLink) {
+        anchorLink.remove();
+      }
+      if (window.Quarto?.typesetMath) {
+        window.Quarto.typesetMath(note);
+      }
+      if (note.classList.contains("callout")) {
+        return note.outerHTML;
+      } else {
+        return note.innerHTML;
+      }
+    }
+  }
+  for (var i=0; i<xrefs.length; i++) {
+    const xref = xrefs[i];
+    tippyHover(xref, undefined, function(instance) {
+      instance.disable();
+      let url = xref.getAttribute('href');
+      let hash = undefined; 
+      if (url.startsWith('#')) {
+        hash = url;
+      } else {
+        try { hash = new URL(url).hash; } catch {}
+      }
+      if (hash) {
+        const id = hash.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note !== null) {
+          try {
+            const html = processXRef(id, note.cloneNode(true));
+            instance.setContent(html);
+          } finally {
+            instance.enable();
+            instance.show();
+          }
+        } else {
+          // See if we can fetch this
+          fetch(url.split('#')[0])
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.getElementById(id);
+            if (note !== null) {
+              const html = processXRef(id, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      } else {
+        // See if we can fetch a full url (with no hash to target)
+        // This is a special case and we should probably do some content thinning / targeting
+        fetch(url)
+        .then(res => res.text())
+        .then(html => {
+          const parser = new DOMParser();
+          const htmlDoc = parser.parseFromString(html, "text/html");
+          const note = htmlDoc.querySelector('main.content');
+          if (note !== null) {
+            // This should only happen for chapter cross references
+            // (since there is no id in the URL)
+            // remove the first header
+            if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+              note.children[0].remove();
+            }
+            const html = processXRef(null, note);
+            instance.setContent(html);
+          } 
+        }).finally(() => {
+          instance.enable();
+          instance.show();
+        });
+      }
+    }, function(instance) {
+    });
+  }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            div.style.left = 0;
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+        // Handle positioning of the toggle
+    window.addEventListener(
+      "resize",
+      throttle(() => {
+        elRect = undefined;
+        if (selectedAnnoteEl) {
+          selectCodeLines(selectedAnnoteEl);
+        }
+      }, 10)
+    );
+    function throttle(fn, ms) {
+    let throttle = false;
+    let timer;
+      return (...args) => {
+        if(!throttle) { // first call gets through
+            fn.apply(this, args);
+            throttle = true;
+        } else { // all the others get throttled
+            if(timer) clearTimeout(timer); // cancel #2
+            timer = setTimeout(() => {
+              fn.apply(this, args);
+              timer = throttle = false;
+            }, ms);
+        }
+      };
+    }
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+</div> <!-- /content -->
+
+
+
+
+</body></html>
