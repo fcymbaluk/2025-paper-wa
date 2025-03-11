@@ -7,54 +7,55 @@ library(dplyr)
 library(tidyr)
 library(tibble)
 
-#' #' I use environmental, social and economic data to explore trends and patterns 
-#' of deforestation in the Amazon biome (my dependent variable) and possible 
+
+#' #' I use environmental, social and economic data to explore trends and patterns
+#' of deforestation in the Amazon biome (my dependent variable) and possible
 #' effects related to social and economic aspects (my independent variables).
-#' The data is sourced from the datazoom.amazonia R package, which facilitates 
-#' access to official Brazilian Amazon data, including agriculture, deforestation, 
-#' production, etc. The package provides functions that download and pre-process 
+#' The data is sourced from the datazoom.amazonia R package, which facilitates
+#' access to official Brazilian Amazon data, including agriculture, deforestation,
+#' production, etc. The package provides functions that download and pre-process
 #' selected datasets. The datasets that I use are:
 #' 
 #' Environemntal:
 #' 
 #' - MapBiomas: A Brazilian project that provides annual land use and land cover
-#' reports. The data is based on satellite images and provides information on the 
-#' Amazon biome, including deforestation and regeneration of vegetation. 
+#' reports. The data is based on satellite images and provides information on the
+#' Amazon biome, including deforestation and regeneration of vegetation.
 #' Areas are measured in hectares (ha).
 #' 
 #' - Imazon: A Brazilian NGO that provides reports on deforestation in the Amazon
-#' biome. The dataset Loads data categorizing each municipality by the level of 
-#' deforestation pressure it faces. The categories used by Imazon have three 
+#' biome. The dataset Loads data categorizing each municipality by the level of
+#' deforestation pressure it faces. The categories used by Imazon have three
 #' levels, ranging from 0 to 3.
 #' 
 #' Social:
 #' 
 #' - IPS: The Social Progress Index (IPS) is a composite index that measures social
-#' progress in Brazilian municipalities. Includes information on the overall social 
-#' progress score, as well as scores for specific components such sanitation, health, 
-#' and education. The data is available for 2014, 2018, 2021, and 2023. 
+#' progress in Brazilian municipalities. Includes information on the overall social
+#' progress score, as well as scores for specific components such sanitation, health,
+#' and education. The data is available for 2014, 2018, 2021, and 2023.
 #' 
 #' Economic (issues when trying to load the data. To be fixed):
 #' 
 #' - PIB-Munic: The Brazilian Institute of Geography and Statistics (IBGE) provides
-#' data of Brazilian municipalities on the Gross Domestic Product (GDP) at current 
-#' prices, taxes, net of subsidies on products, gross value added, total and by economic 
-#' activity, and respective shares. Data is available from 2002 to 2018. 
+#' data of Brazilian municipalities on the Gross Domestic Product (GDP) at current
+#' prices, taxes, net of subsidies on products, gross value added, total and by economic
+#' activity, and respective shares. Data is available from 2002 to 2018.
 #' 
 #' - PAM: The Municipal Agricultural Production (PAM) is an annual survey conducted
-#' by IBGE which provides on the production of crops in Brazilian municipalities. 
-#' Output is only included in the dataset if the planted area occupies over 1 acre. 
+#' by IBGE which provides on the production of crops in Brazilian municipalities.
+#' Output is only included in the dataset if the planted area occupies over 1 acre.
 #' The data available has a yearly frequency and is available from 1974 to the present.
 #' 
-#' - PPM: The Municipal Livestock Production (PPM) is an annual survey conducted by 
-#' IBGE which provides data on the production of livestock in Brazilian municipalities, 
+#' - PPM: The Municipal Livestock Production (PPM) is an annual survey conducted by
+#' IBGE which provides data on the production of livestock in Brazilian municipalities,
 #' such inventories (e.g:cattle, pigs and hogs) and production (e.g: milk, eggs, honey).
 #' The data available has a yearly frequency and is available from 1974 to the present.
 #' 
-#' - SIGMINE: The National Mining Agency (ANM) provides data on mining legally activities 
-#' in Brazilian municipalities. The data includes information on location, status, 
+#' - SIGMINE: The National Mining Agency (ANM) provides data on mining legally activities
+#' in Brazilian municipalities. The data includes information on location, status,
 #' product being mined and area in square meters etc
-#' 
+
 #' #' Cite as:
 #'   Data Zoom (2023). Data Zoom: Simplifying Access To Brazilian Microdata.
 #' https://www.econ.puc-rio.br/datazoom/english/index.html
@@ -71,13 +72,13 @@ install.packages("datazoom.amazonia")
 library(datazoom.amazonia)
 
 
-#'First, I will download the Municipalities dataset and select the variables that interest
-#'to me, such as the municipality code, state, and whether the municipality is 
-#' located within the Legal Amazon. I will also filter the data to include only the 
-#' municipalities in the Legal Amazon. I doubble check the data to ensure that the
-#' variables are correctly loaded. I have got correctly 772 municipalities in the 
-#' Legal Amazon (22 in the state of Acre, 16 in Amapá, 62 in Amazonas, 181 in Maranhão,
-#' 141 in Mato Grosso, 144 in Pará, 52 in Rondônia, 15 in Roraima and 139 in Tocantins).
+# First, I will download the Municipalities dataset and select the variables that interest
+# to me, such as the municipality code, state, and whether the municipality is
+# located within the Legal Amazon. I will also filter the data to include only the
+# municipalities in the Legal Amazon. I doubble check the data to ensure that the
+# variables are correctly loaded. I have got correctly 772 municipalities in the
+# Legal Amazon (22 in the state of Acre, 16 in Amapá, 62 in Amazonas, 181 in Maranhão,
+# 141 in Mato Grosso, 144 in Pará, 52 in Rondônia, 15 in Roraima and 139 in Tocantins).
 
 data_municipalities <- datazoom.amazonia::municipalities %>% 
   select(code_muni, name_state, legal_amazon) %>% 
